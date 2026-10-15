@@ -1,0 +1,62 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment
+.env
+
+# Data (large files - use DVC or Git LFS instead)
+data_cache/
+*.parquet
+*.h5
+*.hdf5
+!tests/fixtures/*.parquet
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_metadata
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Logs
+logs/
+*.log
+
+# Backtest outputs (keep structure, ignore results)
+backtest_results/
+*.pickle
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+*.env.local
+
+# Run outputs
+results/
+plots/
+
+# Claude Code local state
+.claude/worktrees/
+.claude/settings.local.json

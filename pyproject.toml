@@ -1,0 +1,76 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "nse-fno-engine"
+version = "0.1.0"
+description = "NSE F&O pipeline: Upstox futures/options + Kite spot -> ArcticDB -> borrow/roll features -> event-driven backtests"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+
+# Only what the code in this repo imports. Exact versions of the working
+# environment are pinned in requirements.lock (install that first).
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "scipy>=1.12",
+    "pyarrow>=14.0",
+    "arcticdb>=6.17",
+    "requests>=2.31",
+    "pydantic-settings>=2.1",
+    "python-dotenv>=1.0",
+    "loguru>=0.7",
+    "tenacity>=8.2",
+    "kiteconnect>=5.0",
+    "plotly>=5.18",
+    "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "ruff>=0.1",
+]
+
+# Console commands created in .venv\Scripts by `pip install -e .`.
+# Every target is a `main(argv=None)` inside a package listed under
+# [tool.hatch.build.targets.wheel] below, so each one imports in both editable
+# and regular installs.
+[project.scripts]
+# fetch
+fetch-ticker             = "scripts.fetch_ticker:main"
+fetch-options            = "scripts.fetch_options:main"
+fetch-kite-equities      = "scripts.fetch_kite_equities:main"
+fetch-kite-indices       = "scripts.fetch_kite_indices:main"
+kite-login               = "data.fetchers.kite_fetcher:login_main"
+# features
+build-features           = "scripts.feature_builder:main"
+build-borrow-continuous  = "scripts.build_borrow_continuous:main"
+# research
+test-ewma-b12            = "scripts.ewma_b12_signal:main"
+build-gap-timeseries     = "scripts.build_gap_timeseries:main"
+plot-htb-cycles          = "scripts.plot_htb_cycles:main"
+b12-crossings            = "scripts.crossings:main"
+b12-crossings-last10     = "scripts.crossings_last10:main"
+b12-regimes              = "scripts.regimes_last7:main"
+# backtests + report
+backtest-roll-put-hedge  = "backtests.run_roll_put_hedge:main"
+backtest-trough-peak     = "backtests.run_trough_peak_options:main"
+backtest-expiry-straddle = "backtests.run_expiry_straddle:main"
+report-roll-put-hedge    = "backtests.report_roll_put_hedge:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["config", "core", "data", "options", "scripts", "backtests"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
